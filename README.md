@@ -1,3 +1,3 @@
 # Pipeline_ATACSeq
 
-Test V1 Ma
+Test V2 Mac
