@@ -55,18 +55,17 @@ Common adapter sequences to be trimmed are the following:
 # -o    output file for the trimmed forward reads (R1)
 # -p    output file for the trimmed reverse reads (R2)
 
-    python3 -m cutadapt
-    -a CTGTCTCTTATA \ # Nextera example
-    -A CTGTCTCTTATA \
-    -j <#_of_CPUs> \
-    -q 20 \
-    -O 6 \
-    -m 35 \
-    -o <sample_ID>_R1.trim.fastq.gz \
-    -p <sample_ID>_R2.trim.fastq.gz \
-    <sample_ID>_R1.fastq.gz \
-    <sample_ID>_R2.fastq.gz
-
+python3 -m cutadapt
+-a CTGTCTCTTATA \ # Nextera example
+-A CTGTCTCTTATA \
+-j <#_of_CPUs> \
+-q 20 \
+-O 6 \
+-m 35 \
+-o <sample_ID>_R1.trim.fastq.gz \
+-p <sample_ID>_R2.trim.fastq.gz \
+<sample_ID>_R1.fastq.gz \
+<sample_ID>_R2.fastq.gz
 ```
 ## **Quality Control on Trimmed Reads**
 
@@ -85,5 +84,25 @@ fastqc -o <output_dir> <sample_ID>_R2.trim.fastq.gz -t <#_of_CPUs>
 **Figure 3: Example FastQC Output of Adapter Content Post CutAdapt**
 
 ## **Alignment**
+
+```
+# --non-deterministic   default, resolves ties randomly
+# --mm                  enables memory mapping
+# --phred33             default, FASTQ files follow Phred+33 scale
+# --very-sensitive      slower but most sensitive alignment
+# -p                    number of CPUs/threads
+# -x                    reference genome 
+# -1                    input file for the trimmed forward reads (R1)
+# -2                    input file for the trimmed reverse reads (R2)
+# -S                    output file in SAM format
+
+bowtie2 --non-deterministic --mm --phred33 --very-sensitive \
+-p <#_of_CPUs> \
+-x <GRCh38_noalt_decoy_as/GRCh38_noalt_decoy_as> \
+-1 <sample_ID>_R1.trim.fastq.gz \
+-2 <sample_ID>_R2.trim.fastq.gz\
+-S <sample_ID>.sam
+
+```
 
 
