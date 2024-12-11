@@ -80,6 +80,7 @@ fastqc -o <output_dir> <sample_ID>_R1.trim.fastq.gz -t <#_of_CPUs>
 
 fastqc -o <output_dir> <sample_ID>_R2.trim.fastq.gz -t <#_of_CPUs> 
 ```
+<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/FASTQC_Adapter_trim.png" alt="Figure 2: FASTQC Sequence Quality" width="600"/>
 
 **Figure 3: Example FastQC Output of Adapter Content Post CutAdapt**
 
