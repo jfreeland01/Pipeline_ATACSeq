@@ -22,7 +22,7 @@ In ATAC-seq data expect to see Nextera transposase sequencing adapters over-repr
 If interested, alternative/similiar softwares to [FASTQC](#https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) are [FastP](#) or [BBDuk](https://sourceforge.net/projects/bbmap/).
 
 
-<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/FASTQC_Adapter.png" alt="Figure 1: Adapter Sequence" width="500"/>
+<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/FASTQC_Adapter.png" alt="Figure 1: Adapter Sequence" width="600"/>
 
 
 ![Figure 1: FASTQC Adapter Sequence](https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/FASTQC_Adapter.png)
