@@ -23,6 +23,9 @@ If interested, alternative/similiar softwares to [FASTQC](#https://www.bioinform
 
 
 
+![Figure 1: Adapter Sequence](https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/FASTQC_Adapter.png)
+
+
 
 ## Adaptor Trimming
 ## Quality Control on Trimmed Reads
