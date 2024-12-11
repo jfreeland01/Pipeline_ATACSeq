@@ -2,23 +2,30 @@
 
 ## *** UNDER CONSTRUCTION ***
 
-Correspondence = jackfreeland01@gmail.com 
+Contact = jackfreeland01@gmail.com 
 
-### Steps 
+### Outline 
 
-- [Quality Control on Raw Reads](#Quality-Control-on-Raw-Reads)
-- [Adapter Trimming](#Adapter-Trimming)
-- [Quality Control on Trimmed Reads](#Quality-Control-on-Trimmed-Reads)
-- [Alignment](#Alignment)
+- [Introduction](#introduction)
+- [Quality Control on Raw Reads](#quality-control-on-raw-read-files)
+- [Adapter Trimming](#adapter-trimming)
+- [Quality Control on Trimmed Reads](#quality-control-on-trimmed-reads)
+- [Alignment](#alignment)
 
-## Quality Control on Raw Reads
-Before initiating formal processing steps, it is advisable to assess the overall quality of the raw sequencing files. This pipeline uses FASTQC to generate [FastQC reports](https://dnacore.missouri.edu/PDF/FastQC_Manual.pdf) to provide information on sequence quality, GC content, length distribution, duplicate sequences, overrepresented sequences, K-mer content and adapter contamination. 
+## Introduction
 
-If interested, some alternatives to [FASTQC](#https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) are [FastP](#) (doi: 10.1093/bioinformatics/bty560) or [BBDuk](#).
+## Quality Control on Raw Read Files
+Before initiating formal processing steps, it is advisable to assess the overall quality of the raw sequencing files. This pipeline uses [FASTQC](#https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to generate [FastQC reports](https://dnacore.missouri.edu/PDF/FastQC_Manual.pdf) to provide information on sequence quality, GC content, length distribution, duplicate sequences, overrepresented sequences, K-mer content and adapter contamination. 
+
+In ATAC-seq data expect to see Nextera transposase sequencing adapters over-represented and for the overall base sequence quality to fall off near the 3' end.
+
+If interested, alternative/similiar softwares to [FASTQC](#https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) are [FastP](#) or [BBDuk](https://sourceforge.net/projects/bbmap/).
+
+
 
 
 ## Adaptor Trimming
 ## Quality Control on Trimmed Reads
 ## Alignment
 
-TEST - LINUX
+
