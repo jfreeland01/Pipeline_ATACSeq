@@ -64,7 +64,7 @@ Common adapter sequences to be trimmed are the following:
     -m 35 \
     -o <sample_ID>_R1.trim.fastq.gz \
     -p <sample_ID>_R2.trim.fastq.gz \
-	<sample_ID>_R1.fastq.gz \
+    <sample_ID>_R1.fastq.gz \
     <sample_ID>_R2.fastq.gz
 
 ```
