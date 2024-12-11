@@ -20,3 +20,5 @@ If interested, some alternatives to [FASTQC](#https://www.bioinformatics.babraha
 ## Adaptor Trimming
 ## Quality Control on Trimmed Reads
 ## Alignment
+
+TEST - LINUX
