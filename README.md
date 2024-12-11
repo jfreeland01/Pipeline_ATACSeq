@@ -49,21 +49,21 @@ Common adapter sequences to be trimmed are the following:
 # -a    adapter sequence on the forward read (R1)
 # -A    adapter sequence on the reverse read (R2)
 # -j    number of CPUs/threads
-# -q    sets a base Phred quality score threshold
+# -q    sets a base phred quality score threshold (q of 20 keeps bases with 99% accuracy)
 # -O    minimum overlap between the adapter sequence and the read required for the adapter to be trimmed
 # -m    mimimum read length kept after trimming
 # -o    output file for the trimmed forward reads (R1)
 # -p    output file for the trimmed reverse reads (R2)
 
-    python3 -m cutadapt 
+    python3 -m cutadapt
     -a CTGTCTCTTATA \ # Nextera example
-    -A CTGTCTCTTATA \ # Nextera example
-	-j "#_of_CPUs" \
-    -q 20 \ # keeps bases with 99% accuracy
+    -A CTGTCTCTTATA \
+	-j <#_of_CPUs> \
+    -q 20 \
 	-O 6 \
 	-m 35 \
-	-o "$cutadapt_dir/$sample_ID/${sample_ID}_R1.fastq.gz" \
-	-p "$cutadapt_dir/$sample_ID/${sample_ID}_R2.fastq.gz" \
+	-o <sample_ID>_R1.fastq.gz \
+	-p <sample_ID>_R2.fastq.gz \
 	"$subdir"/*_R1_* "$subdir"/*_R2_*
 
 ```
