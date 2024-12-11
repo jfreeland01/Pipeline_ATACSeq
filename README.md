@@ -58,12 +58,12 @@ Common adapter sequences to be trimmed are the following:
     python3 -m cutadapt
     -a CTGTCTCTTATA \ # Nextera example
     -A CTGTCTCTTATA \
-	-j <#_of_CPUs> \
+    -j <#_of_CPUs> \
     -q 20 \
-	-O 6 \
-	-m 35 \
-	-o <sample_ID>_R1.fastq.gz \
-	-p <sample_ID>_R2.fastq.gz \
+    -O 6 \
+    -m 35 \
+    -o <sample_ID>_R1.fastq.gz \
+    -p <sample_ID>_R2.fastq.gz \
 	"$subdir"/*_R1_* "$subdir"/*_R2_*
 
 ```
