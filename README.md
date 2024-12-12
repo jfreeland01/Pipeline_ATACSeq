@@ -2,7 +2,7 @@
 
 ## ** UNDER CONSTRUCTION **
 
-### **Contact**
+### **For questions, comments, suggestions, etc, contact**
 - Email: jackfreeland01@gmail.com
 - LinkedIn: [@JackFreeland](https://www.linkedin.com/in/jack-freeland-384526142)
 - Twitter:  [@JackFreelandLab](https://x.com/JackFreelandLab)
@@ -90,7 +90,7 @@ fastqc -o <output_dir> <sample_ID>_R2.fastq.gz -t <#_of_threads>
 ## **Alignment**
 After confirming the adapter sequences were trimmed, we can now align the reads to a reference genome. This pipeline uses [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) to align reads to the human genome (GRCh38). [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) references can be found [here](#https://benlangmead.github.io/aws-indexes/bowtie). In this example, GRCh38_noalt_decoy_as is used. 
 
-Since the GRCh38 reference genome includes alternate haplotypes, it is advantageous to remove them and retain only the primary assembly (noalt). This prevents reads from mapping equally to multiple regions, which could result in lower quality scores. Plus, the computational overhead is slightly reduced. Using a decoy sequence in your analysis can enhance accuracy. If a read aligns more accurately to the decoy than to the primary assembly, excluding the decoy could cause the read to align incorrectly within the assembly, resulting in false positives. If interested, alternative/similar software to [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is [BWA](#https://bio-bwa.sourceforge.net).
+Since the GRCh38 reference genome includes alternate haplotypes, it is advantageous to remove them and retain only the primary assembly ('noalt'). This prevents reads from mapping equally to multiple regions, which could result in lower quality scores. Including decoy sequences in your analysis can enhance accuracy. If a read aligns to a decoy sequence better than anywhere in the reference, anywhere that it would align within the reference without the decoys being included would result in a false positive. Both steps also decrease processing overhead and time. If interested, alternative/similar software to [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is [BWA](#https://bio-bwa.sourceforge.net).
 
 ```
 # --non-deterministic   default, resolves ties randomly
@@ -114,7 +114,7 @@ bowtie2 --non-deterministic --mm --phred33 --very-sensitive \
 ## **Post-Alignment Filtering**
 After aligning the reads, the data can now be prepped for downstream analyses by converting file type and aplying QC/filtering measures:
 
-- [Converting from .SAM to .Bam](#convert-from-sam-to-bam)
+- [Converting from SAM to Bam](#convert-from-sam-to-bam)
 - [Sort Reads and Index](#sort-reads-and-index)
 - [Adjust for Transposase Binding Offset](#adjust-for-transposase-binding-offset)
 - [Filter Unaligned Reads](#filter-unaligned-reads)
@@ -123,64 +123,65 @@ After aligning the reads, the data can now be prepped for downstream analyses by
 - [Filter for Quality Reads](#filter-for-quality-reads)
 - [Filter of ENCODE blacklists](#filter-of-encode-blacklists)
 
-### **Convert from .SAM to .BAM**
+### **Convert from SAM to BAM**
+Before filtering/QC, the SAM file (text based format) from [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is converted to a BAM file (binary format). This saves significant amounts of storage and processing time as most tools are optimized to process BAM files.
 ```
-samtools view -@ "$ncor" \
+samtools view -@ <#_of_threads> \
 -bS <sample_ID>.sam > <sample_ID>.bam
 ```
 
 ### **Sort Reads and Index**
 ```
-# -@    number of CPUs/thread
+# -@    number of threads
 # -o    output bam file
 
 samtools sort \
--@ <#_of_CPUs> \
+-@ <#_of_threads> \
 -o <${sample_ID}_V1.bam> \
-"$bam_file"
+<sample_ID>.bam
 
-samtools index "$bam_V1"
+samtools index <${sample_ID}_V1.bam>
 ```
 
 ### **Adjust for Transposase Binding Offset**
 ```
-alignmentSieve --bam "$bam_V1" \
--o "$bam_dir/processed/${sample_ID}_V2.bam" \
---ATACshift --numberOfProcessors "$ncor"
+alignmentSieve --bam <sample_ID>_V1.bam \
+-o <sample_ID>_V2.bam --ATACshift \
+--numberOfProcessors <#_of_threads>
 ```
 
 ### **Filter Unaligned Reads**
 ```
-samtools view -@ "$ncor" -b -F 4 -o \
-"$bam_dir/processed/${sample_ID}_V3.bam" "$bam_V2"
+samtools view -@ <#_of_threads> -b -F 4 \ 
+-o <sample_ID>_V3.bam <sample_ID>_V2.bam
 ```
 
 ### **Filter ChrM and 'Decoy' Reads**
 ```
-samtools view -@ "$ncor" -h "$bam_V3" | \
+samtools view -@ "$ncor" -h <sample_ID>_V3.bam | \
 egrep -v "chrM|Un|random|decoy" | \
-samtools view -b -o "$bam_dir/processed/${sample_ID}_V4.bam"
+samtools view -b -o <sample_ID>_V4.bam
 ```
 
 ### **Filter PCR Duplicates**
 ```
-samtools sort -@ "$ncor" -o "$bam_dir/processed/${sample_ID}_V5.bam" "$bam_V4"
+samtools sort -@ "$ncor" -o <sample_ID>_V5.bam <sample_ID>_V4.bam
 
 java -Xmx3G -XX:ParallelGCThreads="$ncor" \
 -jar "$ref_dir/picard.jar" MarkDuplicates \
 -M "$bam_dir/dup_files/${sample_ID}_m.txt" \
--I "$bam_V5" \
--O "$bam_dir/processed/${sample_ID}_V6.bam" \
+-I <sample_ID>_V5.bam \
+-O <sample_ID>_V6.bam \
 -REMOVE_DUPLICATES true
 ```
 
 ### **Filter for Quality Reads**
 ```
-samtools view -b -q 30 -@ "$ncor" "$bam_V6" > "$bam_dir/processed/${sample_ID}_V7.bam"
+samtools view -b -q 30 -@ <#_of_threads> <sample_ID>_V6.bam > <sample_ID>_V7.bam
 ```
 
 ### **Filter of ENCODE blacklists**
 ```
-bedtools subtract -a "$bam_V7" -b "$ref_dir/hg38-blacklist.v2_sorted.bed" \
--A > "$bam_dir/processed/${sample_ID}_V8.bam"
+bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.v2_sorted.bed> \
+-A > <sample_ID>_V8.bam
 ```
