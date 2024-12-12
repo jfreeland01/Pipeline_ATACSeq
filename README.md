@@ -112,11 +112,19 @@ bowtie2 --non-deterministic --mm --phred33 --very-sensitive \
 
 ```
 ## **Post-Alignment Filtering**
+After aligning the reads, the data can now be prepped for downstream analyses by converting file type and aplying QC/filtering measures:
 
+- [Converting from .SAM to .Bam](#convert-from-sam-to-bam)
+- [Sort Reads and Index](#sort-reads-and-index)
+- [Adjust for Transposase Binding Offset](#adjust-for-transposase-binding-offset)
+- [Filter Unaligned Reads](#filter-unaligned-reads)
+- [Filter ChrM and 'Decoy' Reads](#filter-chrm-and-decoy-reads)
+- [Filter PCR Duplicates](#filter-pcr-duplicates)
+- [Filter for Quality Reads](#filter-for-quality-reads)
+- [Filter of ENCODE blacklists](#filter-of-encode-blacklists)
 
 ### **Convert from .SAM to .BAM**
 ```
-
 samtools view -@ "$ncor" \
 -bS <sample_ID>.sam > <sample_ID>.bam
 ```
@@ -134,7 +142,7 @@ samtools sort \
 samtools index "$bam_V1"
 ```
 
-### **Adjust for Transposase Binding Fffset**
+### **Adjust for Transposase Binding Offset**
 ```
 alignmentSieve --bam "$bam_V1" \
 -o "$bam_dir/processed/${sample_ID}_V2.bam" \
@@ -154,7 +162,7 @@ egrep -v "chrM|Un|random|decoy" | \
 samtools view -b -o "$bam_dir/processed/${sample_ID}_V4.bam"
 ```
 
-### **Sort and Filter PCR Duplicates**
+### **Filter PCR Duplicates**
 ```
 samtools sort -@ "$ncor" -o "$bam_dir/processed/${sample_ID}_V5.bam" "$bam_V4"
 
