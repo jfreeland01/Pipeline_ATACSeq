@@ -124,26 +124,28 @@ After aligning the reads, the data can now be prepped for downstream analyses by
 - [Filter of ENCODE blacklists](#filter-of-encode-blacklists)
 
 ### **Convert from SAM to BAM**
-Before filtering/QC, the SAM file (text based format) from [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is converted to a BAM file (binary format). This saves significant amounts of storage and processing time as most tools are optimized to process BAM files.
+Before filtering/QC, the SAM file (text based format) from [Bowtie 2](#https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is converted to a BAM file (binary format) using [Samtools](#https://github.com/samtools/samtools). This saves significant amounts of storage and processing time as most tools are optimized to process BAM files.
 ```
 samtools view -@ <#_of_threads> \
 -bS <sample_ID>.sam > <sample_ID>.bam
 ```
 
 ### **Sort Reads and Index**
+Downstream software requires the BAM file to be sorted and indexed. Indexing creates a companion index file that allows for efficient random access to specific regions of the genome within the BAM files. This can all be done using [Samtools](#https://github.com/samtools/samtools).
 ```
 # -@    number of threads
 # -o    output bam file
 
 samtools sort \
 -@ <#_of_threads> \
--o <${sample_ID}_V1.bam> \
+-o <sample_ID>_V1.bam \
 <sample_ID>.bam
 
 samtools index <${sample_ID}_V1.bam>
 ```
 
 ### **Adjust for Transposase Binding Offset**
+Reads should be adjusted for transposase binding offset. Tn5 transposase binds to DNA and inserts sequencing adapters at staggered positions. It cuts the DNA with a 9-bp overhang between the strands, meaning the positions it reports in sequencing data are not the precise positions of chromatin acessibility, but are slightly shifted version. Wihtout adjustment, peak edges appear shifted, leading to imprecise peak summits. This can be corrected using [deepTools alignmentSieve](#https://deeptools.readthedocs.io/en/develop/content/tools/alignmentSieve.html).
 ```
 alignmentSieve --bam <sample_ID>_V1.bam \
 -o <sample_ID>_V2.bam --ATACshift \
@@ -151,14 +153,22 @@ alignmentSieve --bam <sample_ID>_V1.bam \
 ```
 
 ### **Filter Unaligned Reads**
+Reads that failed to to align to the reference genome should be removed as they do not provide any information about chromatin accessibility. Removing also decreases file size and computational overhead. [Samtools](#https://github.com/samtools/samtools) is used to remove reads with the SAM flag 4 indicating it is unmapped.
+
 ```
+# -b    outputs results in BAM format
+# -F    excludes reads with given flag
+
 samtools view -@ <#_of_threads> -b -F 4 \ 
 -o <sample_ID>_V3.bam <sample_ID>_V2.bam
 ```
 
-### **Filter ChrM and 'Decoy' Reads**
+### **Filter ChrM , scaffold, and 'Decoy' Reads**
+Mitochondiral reads should be removed as they, like unaligned reads, do not provide any information about chromatin accessibility (chrM). Unplaced and random DNA scaffolds should be removed as they are unlikely to reflect chromatin accessibility of known, structured genomic loci. Decoy reads should be removed as decoy sequences are added to a reference genome to mitigate ambiguous read alignment. Decoy sequences largely do not correspond to function genomic loci and often represent technical artifacts or poorly chracterized regions. [Samtools](#https://github.com/samtools/samtools) is again used.
+
+
 ```
-samtools view -@ "$ncor" -h <sample_ID>_V3.bam | \
+samtools view -@ <#_of_threads> -h <sample_ID>_V3.bam | \
 egrep -v "chrM|Un|random|decoy" | \
 samtools view -b -o <sample_ID>_V4.bam
 ```
