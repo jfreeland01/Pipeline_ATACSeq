@@ -174,12 +174,23 @@ samtools view -b -o <sample_ID>_V4.bam
 ```
 
 ### **Filter PCR Duplicates**
+PCR duplicates occur durring library preparation. As the limited amount of DNA you start with in ATAC-seq requres PCR amplification to generate sufficient material for sequencing, multiple copies of the same DNA fragment are generated. This leads to identical/duplicated reads that should be removed. To do this, the BAM file is first sorted again with [Samtools](#https://github.com/samtools/samtools) and then filtered using [Picard MarkDuplicates](#https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard). 
 ```
-samtools sort -@ "$ncor" -o <sample_ID>_V5.bam <sample_ID>_V4.bam
+samtools sort \
+-@ <#_of_threads> \
+-o <sample_ID>_V5.bam <sample_ID>_V4.bam
 
-java -Xmx3G -XX:ParallelGCThreads="$ncor" \
--jar "$ref_dir/picard.jar" MarkDuplicates \
--M "$bam_dir/dup_files/${sample_ID}_m.txt" \
+# -Xmx3G                  sets max memory allocation for the java virtual machine (JVM) 
+# -XX:ParallelGCThreads   sets number of threads for java's garbage collection process
+# -jar picard.jar         run picard.jar which contains Picard tools
+# -M                      writes cify duplication metrics to file
+# -I                      input file
+# -O                      output file
+# -REMOVE_DUPLICATES      ensures, if set to TRUE, duplicates are removed, not just flagged
+
+java -Xmx3G -XX:ParallelGCThreads=<#_of_threads> \
+-jar picard.jar MarkDuplicates \
+-M <sample_ID>_m.txt" \
 -I <sample_ID>_V5.bam \
 -O <sample_ID>_V6.bam \
 -REMOVE_DUPLICATES true
