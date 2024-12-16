@@ -5,7 +5,7 @@
 ### **For questions, comments, suggestions, etc, contact**
 - Email: jackfreeland01@gmail.com
 - LinkedIn: [@JackFreeland](https://www.linkedin.com/in/jack-freeland-384526142)
-- Twitter:  [@JackFreelandLab](https://x.com/JackFreelandLab)
+- Twitter: [@JackFreelandLab](https://x.com/JackFreelandLab)
 
 ### **Outline** 
 
