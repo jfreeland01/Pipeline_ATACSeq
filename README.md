@@ -141,7 +141,7 @@ samtools sort \
 -o <sample_ID>_V1.bam \
 <sample_ID>.bam
 
-samtools index <${sample_ID}_V1.bam>
+samtools index <sample_ID>_V1.bam
 ```
 
 ### **Adjust for Transposase Binding Offset**
@@ -168,6 +168,13 @@ Mitochondiral reads should be removed as they, like unaligned reads, do not prov
 
 
 ```
+# view      extracts BAM file and outputs as SAM (human-readable) to allow us to filter
+# -@        number of threads
+# -h        includes header (important for downstream)
+# egrep -v  excludes lines containing the provided patern
+
+# samtools view -b -o   conerts SAM back to BAM and writes file
+
 samtools view -@ <#_of_threads> -h <sample_ID>_V3.bam | \
 egrep -v "chrM|Un|random|decoy" | \
 samtools view -b -o <sample_ID>_V4.bam
