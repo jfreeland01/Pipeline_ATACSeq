@@ -204,12 +204,22 @@ java -Xmx3G -XX:ParallelGCThreads=<#_of_threads> \
 ```
 
 ### **Filter for Quality Reads**
+Lowquality reads are then filtered out using [Samtools](#https://github.com/samtools/samtools) to ensure downstream analyses are based on reliable and biologically meaningful data. 
 ```
-samtools view -b -q 30 -@ <#_of_threads> <sample_ID>_V6.bam > <sample_ID>_V7.bam
+# -q    MAPQ score threshold (higher = more strict)
+
+samtools view -b -q 30 -@ <#_of_threads> \
+<sample_ID>_V6.bam > <sample_ID>_V7.bam
 ```
 
 ### **Filter of ENCODE blacklists**
+Finaly, the [ENCODE blacklist](#https://www.nature.com/articles/s41598-019-45839-z) contains a list of genomic regions that are critical to remove to when analyzing functional genomic data. Reads that map to these regions are typically not due to true biological signal but rather technical artifacts (e.g., misalignment, PCR, amplification biases). Keeping this reads can introduce noise and false positives. [Bedtools](#https://bedtools.readthedocs.io/en/latest/) can be used for this.
 ```
-bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.v2_sorted.bed> \
+# subtract     subcommand used to subtract regions from one file based on overlaps with another
+# -a           input BAM file
+# -b           ENCODE blacklist
+# -A           only remove reads if they completely overlap
+
+bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.bed> \
 -A > <sample_ID>_V8.bam
 ```
