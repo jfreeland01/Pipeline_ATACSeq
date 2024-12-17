@@ -215,12 +215,12 @@ samtools view -b -q 30 -@ <#_of_threads> \
 ```
 
 ### **Filter of ENCODE blacklists**
-Finaly, the [ENCODE blacklist](https://www.nature.com/articles/s41598-019-45839-z) contains a list of genomic regions that are critical to remove when analyzing functional genomic data. Reads that map to these regions are typically not due to true biological signal but rather technical artifacts (e.g., misalignment, PCR amplification biases). Keeping these reads can introduce noise and false positives. [Bedtools](https://bedtools.readthedocs.io/en/latest/) can be used to filter out these regions.
+Finaly, the [ENCODE blacklist](https://www.nature.com/articles/s41598-019-45839-z) contains a list of genomic regions that are critical to remove when analyzing functional genomic data. Reads that map to these regions are typically not due to true biological signal but rather technical artifacts (e.g., misalignment, PCR amplification biases). Keeping these reads can introduce noise and false positives. [Bedtools](https://bedtools.readthedocs.io/en/latest/) can be used to filter out these regions. The final BAM file will also be indexed to aid in downstream analyses.
 ```
 # subtract     subcommand used to subtract regions from one file based on overlaps with another
-# -a           BAM file to be filtered
-# -b           ENCODE blacklist (BED file)
-# -A           only remove reads if they completely overlap
+# -a    BAM file to be filtered
+# -b    ENCODE blacklist (BED file)
+# -A    only remove reads if they completely overlap
 
 bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.bed> \
 -A > <sample_ID>_V8.bam
