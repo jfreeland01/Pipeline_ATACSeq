@@ -227,6 +227,24 @@ bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.bed> \
 ```
 
 ## **Peak Calling** ##
+After filtering the BAM files, peaks can be called. Peaks are regions of the genome with high levels of read enrichment, indicating areas of open chromatin or accessible DNA. These regions are typically associated with regulatory elements, such as promoters, enhancers, transcription factor binding sites, or other DNA elements where the chromatin is less compact, allowing transcriptional machinery and regulatory proteins to bind. This pipeline uses [MACS3 callpeak](https://github.com/macs3-project/MACS) to identify peaks.
+
+```
+# -f    Specify format of input file (BAMPE = paired-end BAM files)
+# -g    Specify gemoe size (hs = human genome, mm = mouse)
+# -q    False discovery rate (FDR) threshold for peak calling
+# -t    Path to input BAM file
+# -n    Specifies a name prefix for output files
+
+macs3 callpeak \
+-f BAMPE \
+-g hs \
+-q 0.01 \
+-t <sample_ID>_V8.bam \
+-n <sample_ID> \
+--outdir <output_directory>
+```
+
 ## **Peak Count Matrix** ##
 ## **Differential Peak Analyses & MOTIF Enrichment**
 ## **File Conversion Wig/bigWig** ##
