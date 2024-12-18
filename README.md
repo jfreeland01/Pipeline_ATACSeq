@@ -225,3 +225,23 @@ Finaly, the [ENCODE blacklist](https://www.nature.com/articles/s41598-019-45839-
 bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.bed> \
 -A > <sample_ID>_V8.bam
 ```
+
+## **Peak Calling** ##
+## **Peak Count Matrix** ##
+## **Differential Peak Analyses & MOTIF Enrichment**
+## **File Conversion Wig/bigWig** ##
+## **Overall TSS Accessibility** ##
+
+bigwig
+```
+bamCoverage -b "$bam_file" --normalizeUsing RPGC \
+--effectiveGenomeSize 2913022398 \
+-p "$ncor" \
+-o "$bigWig_dir/${sample_ID}.bw" \
+--binSize 10
+```
+
+wig
+```
+bigWigToWig "$bigWig_dir/${sample_ID}.bw" "$Wig_dir/${sample_ID}.wig"
+```
