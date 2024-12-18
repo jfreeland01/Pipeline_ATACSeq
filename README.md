@@ -2,19 +2,32 @@
 
 ## ** UNDER CONSTRUCTION **
 
-### **For questions, comments, suggestions, etc, contact**
-- Email: jackfreeland01@gmail.com
-- LinkedIn: [@JackFreeland](https://www.linkedin.com/in/jack-freeland-384526142)
-- Twitter: [@JackFreelandLab](https://x.com/JackFreelandLab)
 
-### **Outline** 
-
+## **Outline** 
+- [Contact](#contact)
 - [Introduction](#introduction)
+### Pre-processing
 - [Quality Control on Raw Reads](#quality-control-on-raw-reads)
 - [Adapter Trimming](#adapter-trimming)
 - [Quality Control on Trimmed Reads](#quality-control-on-trimmed-reads)
 - [Alignment](#alignment)
 - [Post-Alignment Filtering](#post-alignment-filtering)
+
+### Post-processing
+- [Peak Calling](#peak-calling)
+- [Peak Count Matrix](#peak-count-matrix)
+- [Differential Peak Analyses](#differential-peak-analyses)
+- [MOTIF Enrichment](#motif-enrichment)
+- [File Conversion Wig/bigWig](#file-conversion-wigbigwig)
+- [Overall TSS Accessibility](#overall-tss-accessibility)
+
+## **Contact**
+For questions, comments, suggestions, anything, feel free to contact via git or through the following.
+
+- Email: jackfreeland01@gmail.com
+- LinkedIn: [@JackFreeland](https://www.linkedin.com/in/jack-freeland-384526142)
+- Twitter: [@JackFreelandLab](https://x.com/JackFreelandLab)
+
 
 ## **Introduction**
 This repository provides an example pipeline for processing **bulk ATAC-seq** data (Assay for Transposase-Accessible Chromatin sequencing). Starting with raw fastq files, the pipeline  calls individual peaks and can generate consensus peak count matrices, followed by differential peak accessibility, overall TSS accessibility, and MOTIF enrichment analyses. This walkthrough will cover each step in detail, including the rationale, example code, and explanations of parameters/arguments when appropriate. An excellent resource to first get familiarized with ATAC-seq analysis can be found in [Yan et al. (2020)](https://genomebiology.biomedcentral.com/counter/pdf/10.1186/s13059-020-1929-3.pdf).
@@ -246,20 +259,31 @@ macs3 callpeak \
 ```
 
 ## **Peak Count Matrix** ##
-## **Differential Peak Analyses & MOTIF Enrichment**
+## **Differential Peak Analyses**
+## **MOTIF Enrichment**
 ## **File Conversion Wig/bigWig** ##
-## **Overall TSS Accessibility** ##
+Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig. 
 
-bigwig
+BAM to BigWig
 ```
-bamCoverage -b "$bam_file" --normalizeUsing RPGC \
---effectiveGenomeSize 2913022398 \
--p "$ncor" \
--o "$bigWig_dir/${sample_ID}.bw" \
+# -b                        Input BAM file
+# --normalizeUsing          Normalization methods to account for sequencing depth, genome size, or scaling factors.
+# --effectiveGenomeSize     Specify effective genome size (portion of the genome mappable by reads)
+# -p                        Number of threads for parallel processing
+# -o                        Output file path
+# --binSize                 Size of the bins (in base pairs) used to compute coverage
+
+bamCoverage -b <sample_ID>_V8.bam \
+--normalizeUsing RPGC \
+--effectiveGenomeSize 2913022398 \ (for homo sapiens)
+-p <#_of_threads> \
+-o <sample_ID>.bw \
 --binSize 10
 ```
+BigWig to WIG
 
-wig
 ```
-bigWigToWig "$bigWig_dir/${sample_ID}.bw" "$Wig_dir/${sample_ID}.wig"
+bigWigToWig <sample_ID>.bw <sample_ID>.wig
 ```
+
+## **Overall TSS Accessibility** ##
