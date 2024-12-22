@@ -4,6 +4,7 @@
 
 
 ## **Outline** 
+### Background
 - [Contact](#contact)
 - [Introduction](#introduction)
 ### Pre-processing
