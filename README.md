@@ -305,7 +305,7 @@ bedtools multicov -bams "${bam_files[@]}" -bed "$peak_dir/all_concatenate_sorted
 ```
 
 ## **Differential Peak Analyses**
-
+To perform differential peak analyses, workflows very similar to those used for differential gene expression analyses can be applied, including packages such as [DESeq2](#https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](#https://bioconductor.org/packages/release/bioc/html/edgeR.html), and [limma](#https://bioconductor.org/packages/release/bioc/html/limma.html).
 
 ## **MOTIF Enrichment**
 ## **File Conversion Wig/bigWig** ##
