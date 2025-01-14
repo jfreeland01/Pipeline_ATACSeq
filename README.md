@@ -260,12 +260,52 @@ macs3 callpeak \
 ```
 
 ## **Peak Count Matrix** ##
+After calling peaks, a peak count matrix can be generated for downstream analyses. As a peak count matrix is a tabular representation of read counts for identified genomic regions (peaks) across multiple samples, it is essential to first generate a set of consensus peaks across all samples. This is because any specific region or peak representing the same biological element across samples may vary by a few bases due to differences in MACS3 peak calling or biology. Such variations can complicate downstream quantification, analysis, and interpretation of results.
+
+### **Generate Concensus Peak File**
+```
+### Find all narrowPeak files from MACS3 and concatenate them into one file
+# $peak_dir     Directory containing all MACS3 output files
+
+find "$peak_dir" -name "*.narrowPeak" -exec cat {} + > "$peak_dir/all_concatenate.narrowPeak.bed"
+
+
+### Sort the combined file
+
+sort -k1,1 -k2,2n "$peak_dir/all_concatenate.narrowPeak.bed" > "$peak_dir/all_concatenate_sorted.narrowPeak.bed"
+
+
+### Merge the peaks
+
+bedtools merge -i "$peak_dir/all_concatenate_sorted.narrowPeak.bed" > "$peak_dir/all_concatenate_sorted_merged.narrowPeak.bed"
+```
+### **Generate Concensus Count File**
+```
+###  Create an array of all BAM files
+# $bam_dir     Directory containing all processed BAM files
+bam_files=($bam_dir/*V8.bam)
+
+### Create header with BAM filenames for the multicov output, ensuring tab separation
+
+header="chr\tstart\tend"
+for bam_file in "${bam_files[@]}"; do
+    sample_name=$(basename "$bam_file" | sed 's/_V8.bam//g')
+    header="$header\t$sample_name"
+done
+
+### Output the header to the file
+echo -e "$header" > "$peak_dir/multicov_merged_counts.txt"
+
+### Run bedtools multicov to count reads in merged peaks across all BAM files
+bedtools multicov -bams "${bam_files[@]}" -bed "$peak_dir/all_concatenate_sorted_merged.narrowPeak.bed" >> "$peak_dir/multicov_merged_counts.txt"
+```
+
 ## **Differential Peak Analyses**
 ## **MOTIF Enrichment**
 ## **File Conversion Wig/bigWig** ##
 Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig. 
 
-BAM to BigWig
+### **BAM to BigWig**
 ```
 # -b                        Input BAM file
 # --normalizeUsing          Normalization methods to account for sequencing depth, genome size, or scaling factors.
@@ -281,10 +321,17 @@ bamCoverage -b <sample_ID>_V8.bam \
 -o <sample_ID>.bw \
 --binSize 10
 ```
-BigWig to WIG
+### **BigWig to WIG**
 
 ```
 bigWigToWig <sample_ID>.bw <GRCH38_noalt_decoy_as.chrom.sizes> <sample_ID>.wig
+
+# In this example, the reference file <GRCH38_noalt_decoy_as.chrom.sizes> is structured as follows:
+
+# chr1    248956422
+# chr2    242193529
+# chr3    198295559
+...     ...
 ```
 
 ## **Overall TSS Accessibility** ##
