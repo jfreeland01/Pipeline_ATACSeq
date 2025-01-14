@@ -284,7 +284,7 @@ bamCoverage -b <sample_ID>_V8.bam \
 BigWig to WIG
 
 ```
-bigWigToWig <sample_ID>.bw <sample_ID>.wig
+bigWigToWig <sample_ID>.bw <GRCH38_noalt_decoy_as.chrom.sizes> <sample_ID>.wig
 ```
 
 ## **Overall TSS Accessibility** ##
