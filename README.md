@@ -264,6 +264,8 @@ After calling peaks, a peak count matrix can be generated for downstream analyse
 
 ### **Generate Concensus Peak File**
 ```
+#!/bin/bash
+
 ### Find all narrowPeak files from MACS3 and concatenate them into one file
 # $peak_dir     Directory containing all MACS3 output files
 
@@ -281,6 +283,8 @@ bedtools merge -i "$peak_dir/all_concatenate_sorted.narrowPeak.bed" > "$peak_dir
 ```
 ### **Generate Concensus Count File**
 ```
+#!/bin/bash
+
 ###  Create an array of all BAM files
 # $bam_dir     Directory containing all processed BAM files
 bam_files=($bam_dir/*V8.bam)
@@ -301,6 +305,8 @@ bedtools multicov -bams "${bam_files[@]}" -bed "$peak_dir/all_concatenate_sorted
 ```
 
 ## **Differential Peak Analyses**
+
+
 ## **MOTIF Enrichment**
 ## **File Conversion Wig/bigWig** ##
 Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig. 
