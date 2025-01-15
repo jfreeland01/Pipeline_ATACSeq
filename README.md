@@ -1,8 +1,4 @@
 # Pipeline_ATACSeq
-
-## ** UNDER CONSTRUCTION **
-
-
 ## **Outline** 
 ### Background
 - [Contact](#contact)
