@@ -313,7 +313,7 @@ Of note, the "Peak Count Matrix" protocol will generate a count file with the ch
                     baseMean    log2FC      lfcSE       stat        pvalue      padj
 chr1_808161_808284  30.10598    -0.380062   0.417783    -0.909712   0.362974    0.999999
 chr1_817195_817520  84.26785    0.3425648   0.254628    1.3453500   0.178512    0.999999
-...
+...                 ...         ...         ...         ...         ...         ...
 ```
 
 
