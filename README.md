@@ -307,7 +307,7 @@ bedtools multicov -bams "${bam_files[@]}" -bed "$peak_dir/all_concatenate_sorted
 ## **Differential Peak Analyses**
 To perform differential peak analyses, workflows very similar to those used for differential gene expression analyses can be applied, including packages such as [DESeq2](#https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](#https://bioconductor.org/packages/release/bioc/html/edgeR.html), and [limma](#https://bioconductor.org/packages/release/bioc/html/limma.html).
 
-Of note, the "Peak Count Matrix" protocol will generate a count file with the chromosome number, starting base pair position, and ending base pair position in three seperate columns. These will need to be combined into a single "name" column before running any of the above packages. By running DESeq2 for example, you will generate a table as follows
+Of note, the 'Peak Count Matrix' protocol will generate a count file with the chromosome number, starting base pair position, and ending base pair position in three separate columns. These columns will need to be combined into a single 'name' column before running any of the above packages. For example, by running DESeq2, you will generate a table as follows:
 
 ```
                     baseMean    log2FC      lfcSE       stat        pvalue      padj
@@ -315,13 +315,15 @@ chr1_808161_808284  30.10598    -0.380062   0.417783    -0.909712   0.362974    
 chr1_817195_817520  84.26785    0.3425648   0.254628    1.3453500   0.178512    0.999999
 ...                 ...         ...         ...         ...         ...         ...
 ```
-
-
-
-
 ## **MOTIF Enrichment**
+After performing differential peak analysis, motif enrichment analysis allows you to identify transcription factor binding sites or regulatory elements that are enriched within the differentially accessible regions. This provides insights into the potential regulatory mechanisms driving changes in chromatin accessibility and gene expression, helping to connect observed epigenetic changes with underlying biological processes or pathways. By uncovering enriched motifs, you can prioritize key transcription factors or regulatory networks for further functional validation. This pipeline uses [HOMER](#http://homer.ucsd.edu/homer/motif/) to perform the enrichment.  
+
 ## **File Conversion Wig/bigWig** ##
-Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig. 
+Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig.
+
+```
+findMotifsGenome.pl <significant_peaks_file> hg38 <output_dir> -size given -p <#_of_CPUs>
+```
 
 ### **BAM to BigWig**
 ```
@@ -349,7 +351,7 @@ bigWigToWig <sample_ID>.bw <GRCH38_noalt_decoy_as.chrom.sizes> <sample_ID>.wig
 # chr1    248956422
 # chr2    242193529
 # chr3    198295559
-...     ...
+# ...     ...
 ```
 
 ## **Overall TSS Accessibility** ##
