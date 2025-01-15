@@ -321,8 +321,9 @@ After performing differential peak analysis, motif enrichment analysis allows yo
 ```
 findMotifsGenome.pl <significant_peaks_input_file> hg38 <output_dir> -size given -p <#_of_CPUs>
 ```
+<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/HOMER_Output.png" alt="Figure 4: Example HOMER findMotifsGenome.pl Output" width="600"/>
 
-
+**Figure 4: Example HOMER findMotifsGenome.pl Output**
 
 ## **File Conversion Wig/bigWig** ##
 Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig.
