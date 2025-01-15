@@ -377,6 +377,8 @@ Once the matrix is generated, it can be visualized using [plotHeatmap](https://d
 # --missingDataAsZero       Treats missing data (e.g., regions with no signal in the BigWig file) as zero instead of excluding them from the matrix
 # --skipZeros               Excludes bins with a score of zero from the output matrix
 
+
+### Prepping matrix for one sample
 computeMatrix reference-point \
     --referencePoint TSS \
     --regionsFileName TSS.bed \
@@ -389,6 +391,24 @@ computeMatrix reference-point \
     --missingDataAsZero \
     --skipZeros
 
+### Prepping matrix for multiple samples in given directory
+computeMatrix reference-point \
+    --referencePoint TSS \
+    --regionsFileName TSS.bed \
+    --scoreFileName "$bigwig_dir"/* \
+    --beforeRegionStartLength 3000 \
+    --afterRegionStartLength 3000 \
+    --binSize 10 \
+    --outFileName <sample_ID>_ComputeMatrix_RefPnt.gz \
+    --numberOfProcessors max \
+    --missingDataAsZero \
+    --skipZeros
+
+### Plot matrix
 plotHeatmap -m <sample_ID>_ComputeMatrix_RefPnt.gz \
     -out <sample_ID>_TSS_heatmap.png
 ```
+
+<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/ComputeMatrix_plotHeatmap_OverallTSS.png" alt="Figure 5: Example plotHeatmap Output" width="200"/>
+
+**Figure 5: Example plotHeatmap Output**
