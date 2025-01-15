@@ -1,4 +1,4 @@
-# ATACSeq Pipeline & Workflow
+# ATACSeq Analysis Pipeline & Workflow
 ## **Outline** 
 ### Background
 - [Contact](#contact)
