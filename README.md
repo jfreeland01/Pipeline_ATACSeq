@@ -321,7 +321,7 @@ After performing differential peak analysis, motif enrichment analysis allows yo
 ```
 findMotifsGenome.pl <significant_peaks_input_file> hg38 <output_dir> -size given -p <#_of_CPUs>
 ```
-<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/HOMER_Output.png" alt="Figure 4: Example HOMER findMotifsGenome.pl Output" width="600"/>
+<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/HOMER_Output.png" alt="Figure 4: Example HOMER findMotifsGenome.pl Output" width="800"/>
 
 **Figure 4: Example HOMER findMotifsGenome.pl Output**
 
