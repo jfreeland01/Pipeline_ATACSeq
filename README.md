@@ -409,6 +409,6 @@ plotHeatmap -m <sample_ID>_ComputeMatrix_RefPnt.gz \
     -out <sample_ID>_TSS_heatmap.png
 ```
 
-<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/ComputeMatrix_plotHeatmap_OverallTSS.png" alt="Figure 5: Example plotHeatmap Output" width="200"/>
+<img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/ComputeMatrix_plotHeatmap_OverallTSS.png" alt="Figure 5: Example plotHeatmap Output" width="300"/>
 
 **Figure 5: Example plotHeatmap Output**
