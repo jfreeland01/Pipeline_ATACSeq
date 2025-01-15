@@ -408,3 +408,9 @@ plotHeatmap -m <sample_ID>_ComputeMatrix_RefPnt.gz \
 <img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/ComputeMatrix_plotHeatmap_OverallTSS.png" alt="Figure 5: Example plotHeatmap Output" width="300"/>
 
 **Figure 5: Example plotHeatmap Output**
+
+To group biological replicates or conditions prior to plotting, [WiggleTools](https://github.com/Ensembl/WiggleTools) can be used to calculate the average of multiple WIG files before converting them to BigWig.
+
+```
+wiggletools mean <sample_ID_1>.wig <sample_ID_2>.wig <sample_ID_3>.wig > <sample_ID_123>.wig
+```
