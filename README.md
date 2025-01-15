@@ -358,6 +358,37 @@ bigWigToWig <sample_ID>.bw <GRCH38_noalt_decoy_as.chrom.sizes> <sample_ID>.wig
 ```
 
 ## **Overall TSS Accessibility** ##
+Aside from analyzing individual peaks, groups of peaks, or motifs, it can also be highly informative to examine the overall accessibility of transcription start sites (TSSs). This approach provides a global view of the openness or closeness of the chromatin across the transcriptome, offering insights into overall regulatory dynamics.
 
+To achieve this, [computeMatrix](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html) from the DeepTools suite is used to generate a matrix of scores around specific genomic regions, such as TSSs or other features of interest. The matrix contains binned signal values (e.g., read coverage or signal intensity) for defined regions, allowing for detailed analysis of patterns around these sites. 
 
-[def]: #http://homer.ucsd.edu/homer/ngs/peakMotifs.html
+Once the matrix is generated, it can be visualized using [plotHeatmap](https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html). This tool creates an intuitive heatmap that highlights the accessibility patterns of the selected regions, often complemented by an aggregate profile plot. The heatmap helps identify trends in chromatin accessibility, such as regions with consistently high or low accessibility, and can reveal differences between conditions or sample groups.
+
+```
+# --referencePoint          Specifies the mode of matrix computation. This calculates scores relative to a fixed point.
+# --referencePoint          Defines the reference point within the regions specified in the BED file. Here, TSS is used as the reference point.
+# --regionsFileName         Input file containing genomic regions of interest in BED format.
+# --scoreFileName           Input BigWig file containing the scores (e.g., read coverage, signal intensity)
+# --beforeRegionStartLength The distance upstream (5' direction) of the reference point (TSS) to include in the analysis.
+# --afterRegionStartLength  The distance downstream (3' direction) of the reference point (TSS) to include in the analysis.
+# --binSize                 Defines the size (in base pairs) of bins used for averaging scores. Smaller bin results in finer resolution.
+# --outFileName             Specifies output file name for the resulting matrix to be used in downstream visualization tools.
+# --numberOfProcessors      Specifies number of threads to use
+# --missingDataAsZero       Treats missing data (e.g., regions with no signal in the BigWig file) as zero instead of excluding them from the matrix
+# --skipZeros               Excludes bins with a score of zero from the output matrix
+
+computeMatrix reference-point \
+    --referencePoint TSS \
+    --regionsFileName TSS.bed \
+    --scoreFileName <sample_ID>.bw \
+    --beforeRegionStartLength 3000 \
+    --afterRegionStartLength 3000 \
+    --binSize 10 \
+    --outFileName <sample_ID>_ComputeMatrix_RefPnt.gz \
+    --numberOfProcessors max \
+    --missingDataAsZero \
+    --skipZeros
+
+plotHeatmap -m <sample_ID>_ComputeMatrix_RefPnt.gz \
+    -out <sample_ID>_TSS_heatmap.png
+```
