@@ -360,7 +360,14 @@ To achieve this, [computeMatrix](https://deeptools.readthedocs.io/en/develop/con
 
 Once the matrix is generated, it can be visualized using [plotHeatmap](https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html). This tool creates an intuitive heatmap that highlights the accessibility patterns of the selected regions, often complemented by an aggregate profile plot. The heatmap helps identify trends in chromatin accessibility, such as regions with consistently high or low accessibility, and can reveal differences between conditions or sample groups.
 
+To group biological replicates or conditions prior to plotting, [WiggleTools](https://github.com/Ensembl/WiggleTools) can be used to calculate the average of multiple WIG files before converting them to BigWig.
+
 ```
+### Average WIG files (if needed)
+wiggletools mean <sample_ID_1>.wig <sample_ID_2>.wig <sample_ID_3>.wig > <sample_ID_123>.wig
+
+### Prepping matrix 
+
 # --referencePoint          Specifies the mode of matrix computation. This calculates scores relative to a fixed point.
 # --referencePoint          Defines the reference point within the regions specified in the BED file. Here, TSS is used as the reference point.
 # --regionsFileName         Input file containing genomic regions of interest in BED format.
@@ -373,8 +380,7 @@ Once the matrix is generated, it can be visualized using [plotHeatmap](https://d
 # --missingDataAsZero       Treats missing data (e.g., regions with no signal in the BigWig file) as zero instead of excluding them from the matrix
 # --skipZeros               Excludes bins with a score of zero from the output matrix
 
-
-### Prepping matrix for one sample
+## For one BigWig file
 computeMatrix reference-point \
     --referencePoint TSS \
     --regionsFileName TSS.bed \
@@ -387,7 +393,7 @@ computeMatrix reference-point \
     --missingDataAsZero \
     --skipZeros
 
-### Prepping matrix for multiple samples in given directory
+## For all BigWig files in a given directory
 computeMatrix reference-point \
     --referencePoint TSS \
     --regionsFileName TSS.bed \
@@ -408,9 +414,3 @@ plotHeatmap -m <sample_ID>_ComputeMatrix_RefPnt.gz \
 <img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/ComputeMatrix_plotHeatmap_OverallTSS.png" alt="Figure 5: Example plotHeatmap Output" width="300"/>
 
 **Figure 5: Example plotHeatmap Output**
-
-To group biological replicates or conditions prior to plotting, [WiggleTools](https://github.com/Ensembl/WiggleTools) can be used to calculate the average of multiple WIG files before converting them to BigWig.
-
-```
-wiggletools mean <sample_ID_1>.wig <sample_ID_2>.wig <sample_ID_3>.wig > <sample_ID_123>.wig
-```
