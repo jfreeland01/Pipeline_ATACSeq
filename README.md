@@ -30,7 +30,7 @@ For questions, comments, suggestions, anything, feel free to contact via git or 
 This repository provides an example pipeline for processing **bulk ATAC-seq** data (Assay for Transposase-Accessible Chromatin sequencing). Starting with raw fastq files, the pipeline  calls individual peaks and can generate consensus peak count matrices, followed by differential peak accessibility, overall TSS accessibility, and MOTIF enrichment analyses. This walkthrough will cover each step in detail, including the rationale, example code, and explanations of parameters/arguments when appropriate. An excellent resource to first get familiarized with ATAC-seq analysis can be found in [Yan et al. (2020)](https://genomebiology.biomedcentral.com/counter/pdf/10.1186/s13059-020-1929-3.pdf).
 
 ## **Quality Control on Raw Reads**
-Before initiating any formal processing steps, it is advisable to assess the overall quality of the raw sequencing files. This pipeline uses [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to generate [FastQC reports](https://dnacore.missouri.edu/PDF/FastQC_Manual.pdf) that provide information on sequence quality, GC content, length distribution, duplicate sequences, overrepresented sequences, K-mer content and adapter contamination. For paired-end sequencing, this analysis should be performed on both files. In ATAC-seq [FastQC reports](https://dnacore.missouri.edu/PDF/FastQC_Manual.pdf), we expect to see Nextera transposase sequencing adapters over-represented and a decrease in overall sequence quality near the 3' end. If interested, alternative or similar software to [FastQC](#https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) includes [FastP](https://github.com/OpenGene/fastp) and [BBDuk](https://sourceforge.net/projects/bbmap/).
+Before initiating any formal processing steps, it is advisable to assess the overall quality of the raw sequencing files. This pipeline uses [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to generate [FastQC reports](https://dnacore.missouri.edu/PDF/FastQC_Manual.pdf) that provide information on sequence quality, GC content, length distribution, duplicate sequences, overrepresented sequences, K-mer content and adapter contamination. For paired-end sequencing, QC should be performed separately on both the forward and reverse read files. In ATAC-seq [FastQC reports](https://dnacore.missouri.edu/PDF/FastQC_Manual.pdf), we expect to see Nextera transposase sequencing adapters over-represented and a decrease in overall sequence quality near the 3' end. If interested, alternative or similar software to [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) includes [FastP](https://github.com/OpenGene/fastp) and [BBDuk](https://sourceforge.net/projects/bbmap/).
 
 ```
 # -t    number of threads
@@ -50,7 +50,7 @@ fastqc -o <output_dir> <sample_ID>_R2.fastq.gz -t <#_of_threads>
 **Figure 2: Example FastQC Output of Sequence Quality**
 
 ## **Adapter Trimming**
-As identified by [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), your reads are often contaminated by adapter sequences, which need to be trimmed before alignment. These adapter sequences are artificial sequences introduced during library preparation. If not removed, they can falsely align to the reference genome, leading to incorrect mapping results and increased noise. This pipeline uses [CutAdapt](https://cutadapt.readthedocs.io/en/stable/). If interested, alternative or similar software to [CutAdapt](https://cutadapt.readthedocs.io/en/stable/) includes [FastP](https://github.com/OpenGene/fastp), [ApadpterRemoval](https://adapterremoval.readthedocs.io/en/2.3.x/) and [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic).
+[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) often identifies adapter sequences contaminating the reads, which must be trimmed prior to alignment. These adapter sequences are artificial sequences introduced during library preparation. If not removed, they can falsely align to the reference genome, leading to incorrect mapping results and increased noise. This pipeline uses [CutAdapt](https://cutadapt.readthedocs.io/en/stable/). If interested, alternative or similar software to [CutAdapt](https://cutadapt.readthedocs.io/en/stable/) includes [FastP](https://github.com/OpenGene/fastp), [ApadpterRemoval](https://adapterremoval.readthedocs.io/en/2.3.x/) and [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic).
 
 Common adapter sequences are the following:
 
@@ -65,7 +65,7 @@ Common adapter sequences are the following:
 # -j    number of threads
 # -q    phred quality score threshold (q of 20 keeps bases with 99% accuracy)
 # -O    minimum overlap between the adapter sequence and the read required for the adapter to be trimmed
-# -m    mimimum read length rquired to be kept after trimming
+# -m    minimum read length rquired to be kept after trimming
 # -o    output file for the trimmed forward reads (R1)
 # -p    output file for the trimmed reverse reads (R2)
 
@@ -133,7 +133,7 @@ After aligning the reads, the data can be prepared for downstream analyses by co
 - [Filter of ENCODE blacklists](#filter-of-encode-blacklists)
 
 ### **Convert from SAM to BAM**
-Before applying filtering or QC, the SAM file (a text based format) generated by [Bowtie 2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is converted to a BAM file (a binary format) using [Samtools](https://github.com/samtools/samtools). This conversion significant reduces storage requirements and processing time, as most tools are optimized to handle BAM files.
+Before applying filtering or QC, the SAM file (a text based format) generated by [Bowtie 2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) is converted to a BAM file (a binary format) using [Samtools](https://github.com/samtools/samtools). This conversion significantly reduces storage requirements and processing time, as most tools are optimized to handle BAM files.
 ```
 samtools view -@ <#_of_threads> \
 -bS <sample_ID>.sam > <sample_ID>.bam
@@ -154,7 +154,7 @@ samtools index <sample_ID>_V1.bam
 ```
 
 ### **Adjust for Transposase Binding Offset**
-Reads should be adjusted for transposase binding offset. Tn5 transposase binds to DNA and inserts sequencing adapters at staggered positions. It cuts the DNA with a 9-bp overhang between the strands, meaning the positions reported in sequencing data are not the exact sites of chromatin accessibility but are slightly shifted versions. Without adjustment, peak edges appear shifted, leading to imprecise peak summits. This offset can be corrected using [deepTools alignmentSieve](https://deeptools.readthedocs.io/en/develop/content/tools/alignmentSieve.html).
+Reads must be adjusted to account for the transposase binding offset to ensure accurate peak summit identification. Tn5 transposase binds to DNA and inserts sequencing adapters at staggered positions. It cuts the DNA with a 9-bp overhang between the strands, meaning the positions reported in sequencing data are not the exact sites of chromatin accessibility but are slightly shifted versions. Without adjustment, peak edges appear shifted, leading to imprecise peak summits. This offset can be corrected using [deepTools alignmentSieve](https://deeptools.readthedocs.io/en/develop/content/tools/alignmentSieve.html).
 
 ```
 # --bam     input BAM file
@@ -177,7 +177,7 @@ samtools view -@ <#_of_threads> -b -F 4 \
 ```
 
 ### **Filter ChrM, DNA scaffold, and 'Decoy' Reads**
-Mitochondiral reads should be removed as they, like unaligned reads, do not provide any information about chromatin accessibility (chrM). Unplaced and random DNA scaffolds should also be removed, as they are unlikely to reflect the chromatin accessibility of known, structured genomic loci. Decoy reads should be removed as decoy sequences are added to a reference genome to mitigate ambiguous read alignment. Decoy sequences largely do not correspond to function genomic loci and often represent technical artifacts or poorly chracterized regions. [Samtools](https://github.com/samtools/samtools) is used again.
+Mitochondrial reads should be removed as they, like unaligned reads, do not provide any information about chromatin accessibility (chrM). Unplaced and random DNA scaffolds should also be removed, as they are unlikely to reflect the chromatin accessibility of known, structured genomic loci. Decoy reads should be removed as decoy sequences are added to a reference genome to mitigate ambiguous read alignment. Decoy sequences largely do not correspond to function genomic loci and often represent technical artifacts or poorly characterized regions. [Samtools](https://github.com/samtools/samtools) is used again.
 
 ```
 # view      extracts BAM file and outputs as SAM (human-readable) to allow us to filter
@@ -225,7 +225,7 @@ samtools view -b -q 30 -@ <#_of_threads> \
 ```
 
 ### **Filter of ENCODE blacklists**
-Finaly, the [ENCODE blacklist](https://www.nature.com/articles/s41598-019-45839-z) contains a list of genomic regions that are critical to remove when analyzing functional genomic data. Reads that map to these regions are typically not due to true biological signal but rather technical artifacts (e.g., misalignment, PCR amplification biases). Keeping these reads can introduce noise and false positives. [Bedtools](https://bedtools.readthedocs.io/en/latest/) can be used to filter out these regions. The final BAM file will also be indexed to aid in downstream analyses.
+Finally, the [ENCODE blacklist](https://www.nature.com/articles/s41598-019-45839-z) contains a list of genomic regions that are critical to remove when analyzing functional genomic data. Reads that map to these regions are typically not due to true biological signal but rather technical artifacts (e.g., misalignment, PCR amplification biases). Keeping these reads can introduce noise and false positives. [Bedtools](https://bedtools.readthedocs.io/en/latest/) can be used to filter out these regions. The final BAM file will also be indexed to aid in downstream analyses.
 ```
 # subtract     subcommand used to subtract regions from one file based on overlaps with another
 # -a    BAM file to be filtered
@@ -237,7 +237,7 @@ bedtools subtract -a <sample_ID>_V7.bam -b <hg38-blacklist.bed> \
 ```
 
 ## **Peak Calling** ##
-After filtering the BAM files, peaks can be called. Peaks are regions of the genome with high levels of read enrichment, indicating areas of open chromatin or accessible DNA. These regions are typically associated with regulatory elements, such as promoters, enhancers, transcription factor binding sites, or other DNA elements where the chromatin is less compact, allowing transcriptional machinery and regulatory proteins to bind. This pipeline uses [MACS3 callpeak](https://github.com/macs3-project/MACS) to identify peaks.
+After filtering the BAM files, peaks can be called. Peaks represent genomic regions with high read enrichment, reflecting areas of open chromatin or accessible DNA. These regions are typically associated with regulatory elements, such as promoters, enhancers, transcription factor binding sites, or other DNA elements where the chromatin is less compact, allowing transcriptional machinery and regulatory proteins to bind. This pipeline uses [MACS3 callpeak](https://github.com/macs3-project/MACS) to identify peaks.
 
 ```
 # -f    Specify format of input file (BAMPE = paired-end BAM files)
@@ -256,7 +256,7 @@ macs3 callpeak \
 ```
 
 ## **Peak Count Matrix** ##
-After calling peaks, a peak count matrix can be generated for downstream analyses. As a peak count matrix is a tabular representation of read counts for identified genomic regions (peaks) across multiple samples, it is essential to first generate a set of consensus peaks across all samples. This is because any specific region or peak representing the same biological element across samples may vary by a few bases due to differences in MACS3 peak calling or biology. Such variations can complicate downstream quantification, analysis, and interpretation of results.
+After calling peaks, a peak count matrix can be generated for downstream analyses. As a peak count matrix is a tabular representation of read counts for identified genomic regions (peaks) across multiple samples, it is essential to first generate a set of consensus peaks across all samples. This is because any specific region or peak representing the same biological element across samples may vary by a few bases due to differences in MACS3 peak calling or biology. These variations can significantly complicate downstream quantification, analysis, and interpretation of results.
 
 ### **Generate Concensus Peak File**
 ```
@@ -301,7 +301,7 @@ bedtools multicov -bams "${bam_files[@]}" -bed "$peak_dir/all_concatenate_sorted
 ```
 
 ## **Differential Peak Analyses**
-To perform differential peak analyses, workflows very similar to those used for differential gene expression analyses can be applied, including packages such as [DESeq2](#https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](#https://bioconductor.org/packages/release/bioc/html/edgeR.html), and [limma](#https://bioconductor.org/packages/release/bioc/html/limma.html).
+To perform differential peak analyses, workflows very similar to those used for differential gene expression analyses can be applied, including packages such as [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), and [limma](https://bioconductor.org/packages/release/bioc/html/limma.html).
 
 Of note, the 'Peak Count Matrix' protocol will generate a count file with the chromosome number, starting base pair position, and ending base pair position in three separate columns. These columns will need to be combined into a single 'name' column before running any of the above packages. For example, by running DESeq2, you will generate a table as follows:
 
