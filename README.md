@@ -316,7 +316,7 @@ chr1_817195_817520  84.26785    0.3425648   0.254628    1.3453500   0.178512    
 ...                 ...         ...         ...         ...         ...         ...
 ```
 ## **MOTIF Enrichment**
-After performing differential peak analysis, motif enrichment analysis allows you to identify transcription factor binding sites or regulatory elements that are enriched within the differentially accessible regions. This provides insights into the potential regulatory mechanisms driving changes in chromatin accessibility and gene expression, helping to connect observed epigenetic changes with underlying biological processes or pathways. By uncovering enriched motifs, you can prioritize key transcription factors or regulatory networks for further functional validation. This pipeline uses [HOMER](#http://homer.ucsd.edu/homer/motif/) to perform the enrichment.  
+After performing differential peak analysis, motif enrichment analysis allows you to identify transcription factor binding sites or regulatory elements that are enriched within the differentially accessible regions. This provides insights into the potential regulatory mechanisms driving changes in chromatin accessibility and gene expression, helping to connect observed epigenetic changes with underlying biological processes or pathways. By uncovering enriched motifs, you can prioritize key transcription factors or regulatory networks for further functional validation. This pipeline uses [HOMER](http://homer.ucsd.edu/homer/ngs/peakMotifs.html) to perform the enrichment.  
 
 ## **File Conversion Wig/bigWig** ##
 Many packages which visualize genomic data (such as ATAC) requires BAM files to be converted to either WIG or BigWig files. Here, [deepTools bamCoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) is used to convert from BAM to BigWig and [UCSC Genome Broswer bigWigtoWig](https://www.encodeproject.org/software/bigwigtowig/) to convert from BigWig to Wig.
@@ -355,3 +355,6 @@ bigWigToWig <sample_ID>.bw <GRCH38_noalt_decoy_as.chrom.sizes> <sample_ID>.wig
 ```
 
 ## **Overall TSS Accessibility** ##
+
+
+[def]: #http://homer.ucsd.edu/homer/ngs/peakMotifs.html
