@@ -1,8 +1,8 @@
 #!/bin/bash
 
-### By: Jack Freeland (jackfreeland01@gmail.com, https://www.linkedin.com/in/jack-freeland-384526142)
-### Execute this to run computeMatrix & plotHeatmap
-### File names (file1/2/3) and what you are search for (i.e. *.wig) will need to be modified
+### By: Jack Freeland (https://github.com/jfreeland01)
+### Execute this to run generate mean wig files and convert wig to bigwig format (block out chunks as all will not be needed at same time)
+### File names (file1/2/3) and what you are search for (i.e. *.wig) will need to be modified. Number of files can also be increased/decreased for mean.
 
 parent_dir=""
 wig_dir="$parent_dir/Wig"

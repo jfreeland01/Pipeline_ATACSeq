@@ -1,10 +1,10 @@
 #!/bin/bash
 
-### By: Jack Freeland (jackfreeland01@gmail.com, https://www.linkedin.com/in/jack-freeland-384526142)
+### By: Jack Freeland (https://github.com/jfreeland01)
 ### Execute this to run HOMER findMotifsGenome.pl
 
 parent_dir=""
-input_dir="$parent_dir/DESeq2/homer"
+input_dir="$parent_dir/DESeq2/homer" # wherever your input files are
 nthread=""
 
 ### Loop over each .txt file in the input_dir

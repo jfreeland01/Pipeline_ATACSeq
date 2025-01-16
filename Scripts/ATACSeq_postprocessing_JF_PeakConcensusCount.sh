@@ -1,7 +1,7 @@
 #!/bin/bash
 
-### By: Jack Freeland (jackfreeland01@gmail.com, https://www.linkedin.com/in/jack-freeland-384526142)
-### Run this to get consensus peak files files
+### By: Jack Freeland (https://github.com/jfreeland01)
+### Execute this to get consensus peak files files
 
 ### Directories 
 parent_dir=""

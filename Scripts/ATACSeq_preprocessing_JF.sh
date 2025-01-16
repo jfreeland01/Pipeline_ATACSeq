@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Pipeline for preprocessing ATAC-Seq data
-### By: Jack Freeland (jackfreeland01@gmail.com, https://www.linkedin.com/in/jack-freeland-384526142)
+### By: Jack Freeland (https://github.com/jfreeland01)
 ### This pipeline will take take a directory ($parent_dir) which contains a folder of raw fastq files ($raw_dir) from a paired-end ATACSeq experiment and generate BAM/wig/bigwig files and call peaks.
 ### *NOTE* - Depending on your fastq file naming format, the method used to generate $sample_ID may need to be modified.
 

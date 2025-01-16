@@ -1,7 +1,7 @@
 #!/bin/bash
 
-### By: Jack Freeland (jackfreeland01@gmail.com, https://www.linkedin.com/in/jack-freeland-384526142)
-### Execute this to run computeMatrix & plotHeatmap
+### By: Jack Freeland (https://github.com/jfreeland01)
+### Execute this to run computeMatrix & plotHeatmap (block out chunks as all will not be needed at same time)
 
 ### Directories 
 parent_dir=""
@@ -24,7 +24,7 @@ computeMatrix reference-point \
     --beforeRegionStartLength 3000 \
     --afterRegionStartLength 3000 \
     --binSize 10 \
-    --outFileName "$matrix_dir/ComputeMatrix_RefPnt_ATAC.gz" \
+    --outFileName "$matrix_dir/ComputeMatrix_RefPnt.gz" \
     --numberOfProcessors "$nthread" \
     --missingDataAsZero \
     --skipZeros
