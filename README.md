@@ -74,7 +74,7 @@ Common adapter sequences are the following:
 python3 -m cutadapt
 -a CTGTCTCTTATA \ # Nextera example
 -A CTGTCTCTTATA \
--j <#_of_CPUs> \
+-j <#_of_threadss> \
 -q 20 \
 -O 6 \
 -m 35 \
@@ -317,7 +317,8 @@ chr1_817195_817520  84.26785    0.3425648   0.254628    1.3453500   0.178512    
 After performing differential peak analysis, motif enrichment analysis allows you to identify transcription factor binding sites or regulatory elements that are enriched within the differentially accessible regions. This provides insights into the potential regulatory mechanisms driving changes in chromatin accessibility and gene expression, helping to connect observed epigenetic changes with underlying biological processes or pathways. By uncovering enriched motifs, you can prioritize key transcription factors or regulatory networks for further functional validation. This pipeline uses [HOMER](http://homer.ucsd.edu/homer/ngs/peakMotifs.html) to perform the enrichment.
 
 ```
-findMotifsGenome.pl <significant_peaks_input_file> hg38 <output_dir> -size given -p <#_of_CPUs>
+findMotifsGenome.pl <significant_peaks_input_file> hg38 <output_dir> -size given -p <#_of_thread
+s>
 ```
 <img src="https://github.com/jfreeland01/Pipeline_ATACSeq/blob/main/Figures/HOMER_Output.png" alt="Figure 4: Example HOMER findMotifsGenome.pl Output" width="800"/>
 
