@@ -2,7 +2,8 @@
 
 ### Pipeline for preprocessing ATAC-Seq data
 ### By: Jack Freeland (jackfreeland01@gmail.com, https://www.linkedin.com/in/jack-freeland-384526142)
-### This pipeline will take a directory ($parent_dir) which contains a folder of raw fastq files ($raw_dir) from a paired-end ATACSeq experiment and generate BAM/wig/bigwig files and call peaks.
+### This pipeline will take take a directory ($parent_dir) which contains a folder of raw fastq files ($raw_dir) from a paired-end ATACSeq experiment and generate BAM/wig/bigwig files and call peaks.
+### *NOTE* - Depending on your fastq file naming format, the method used to generate $sample_ID may need to be modified.
 
 ### Provide a path for the following directories:
 
@@ -10,6 +11,7 @@
 ### $raw_dir - sub-directory containing raw fastq files
 ### $ref_dir - sub-directory containing genome reference/index for bowtie2 (https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)
 ### $nthread - number of threads to be run. Note - When filtering for PCR dups, it asks for number of threads (default nthread) and an amount of memory to be alocated to each (default 3G Xmx3G). So ensure you have 3Gb*nthread of memory available. If not, lower memory allocation (e.g., 1-2Gb) or replace nthread with something lower value for function (lowering memory and keeping cores higher seems to perform better)
+
 
 parent_dir=""
 raw_dir="$parent_dir/raw_fastq"
